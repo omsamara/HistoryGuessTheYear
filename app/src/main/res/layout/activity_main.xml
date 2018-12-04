@@ -4,8 +4,37 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/black"
+    android:background="@android:color/holo_blue_bright"
     tools:context="com.example.omar.historyguesstheyear.MainActivity">
+
+    <TextView
+        android:id="@+id/currentLevel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/progressiveLevel"
+        android:text="TextView" />
+
+    <Button
+        android:id="@+id/submitGuess"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/yearGuessEntry"
+        android:layout_centerHorizontal="true"
+        android:text="@string/Submit" />
+
+    <EditText
+        android:id="@+id/yearGuessEntry"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/imageView"
+        android:layout_centerHorizontal="true"
+        android:shadowColor="@android:color/background_light"
+        android:autofillHints="@string/yearEntry"
+        android:hint="@string/yearEntry"
+        android:ems="10"
+        android:inputType="number" />
 
     <TextView
         android:id="@+id/industrialLevel"
@@ -50,33 +79,38 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
+        android:contentDescription="@string/imageDescription"
         app:srcCompat="@mipmap/ic_launcher" />
 
-    <Button
-        android:id="@+id/industrialButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentBottom="true"
-        android:text="Button" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-    <Button
-        android:id="@+id/civilRightsButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_toEndOf="@+id/industrialButton"
-        android:layout_toRightOf="@+id/industrialButton"
-        android:text="Button" />
+        <Button
+            android:id="@+id/industrialButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_gravity="bottom"
+            android:text="@string/industrializationButton" />
 
-    <Button
-        android:id="@+id/progressiveButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_toEndOf="@+id/civilRightsButton"
-        android:layout_toRightOf="@+id/civilRightsButton"
-        android:layout_alignParentBottom="true"
-        android:text="Button" />
+        <Button
+            android:id="@+id/civilRightsButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_gravity="bottom"
+            android:text="@string/civilRightsButton" />
+
+        <Button
+            android:id="@+id/progressiveButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_gravity="bottom"
+            android:text="@string/progressiveButton" />
+
+    </LinearLayout>
+
 
 </RelativeLayout>

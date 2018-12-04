@@ -2,12 +2,17 @@
     <string name="app_name">History Guess The Year</string>
 
     <!-- Strings for level indicator names -->
-    <string name="progressiveDefaultLevel">Progressive Era Level: Novice</string>
-    <string name="civilRightsDefaultLevel">Civil Rights Level: Novice</string>
+    <string name="progressiveDefaultLevel">Progressive Era Level: \u0020Novice</string>
+    <string name="civilRightsDefaultLevel">Civil Rights Level: \u0020  \u0020  \u0020  \u0020  \u0020Novice</string>
     <string name="industrialLevel">Industrialization Level: Novice</string>
 
     <!-- Strings for button text -->
     <string name="progressiveButton">Progressive Era</string>
     <string name="civilRightsButton">Civil Rights Era</string>
     <string name="industrializationButton">Industrialization</string>
+
+    <string name="imageDescription"> Image for all of the primary sources </string>
+    <string name="yearEntry"> Enter Year Guess </string>
+    <string name="Submit"> Submit </string>
+
 </resources>
