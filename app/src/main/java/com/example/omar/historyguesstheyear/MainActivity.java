@@ -1,12 +1,15 @@
 package com.example.omar.historyguesstheyear;
 
+import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -16,24 +19,14 @@ public class MainActivity extends AppCompatActivity {
 
     // Image and TextViews
     private TextView currentCategoryView;
-    private EditText guessEntry;
+    private EditText yearEntry;
     private TextView industrialLevel;
     private TextView civilRightsLevel;
     private TextView progressiveLevel;
+
     private ImageView sourceImage;
 
     // Mastery level tracker
-    private CategoryLevel industrialLevelEnum = CategoryLevel.NOVICE;
-    private CategoryLevel civilRightsLevelEnum = CategoryLevel.NOVICE;
-    private CategoryLevel progressiveLevelEnum = CategoryLevel.NOVICE;
-
-    //Preferred Image Height: 263 pixels.
-
-    // Buttons
-    private Button industrialButton;
-    private Button civilRightsButton;
-    private Button progressiveButton;
-    private Button submitGuess;
 
     // Queues for storing the next images and keeping track of what is next
     private Queue<Integer> industrialImageQueue;
@@ -45,12 +38,10 @@ public class MainActivity extends AppCompatActivity {
     private HashMap<Integer, Integer> civilRightsImageMap;
     private HashMap<Integer, Integer> progressiveImageMap;
 
-    // Current User Score for the current category
-    private int userScore;
-
     // Number of sources answered for the current category
     private int sourcesAnswered;
 
+    private int combinedYearDifference;
     // The ID of the current image that is the primary source
     private int currentImageId;
 
@@ -80,24 +71,20 @@ public class MainActivity extends AppCompatActivity {
         populateImageQueues();
         // Remove the first source from the image queue because it's already the default image.
         industrialImageQueue.remove();
-        userScore = 0;
         sourcesAnswered = 0;
         currentCategory = Category.INDUSTRIALIZATION;
+        currentImageId = R.drawable.carnegiehome;
     }
 
     private void instantiateViews() {
 
         currentCategoryView = findViewById(R.id.currentCategory);
-        guessEntry = findViewById(R.id.yearGuessEntry);
+        yearEntry = findViewById(R.id.yearGuessEntry);
         industrialLevel = findViewById(R.id.industrialLevel);
         civilRightsLevel = findViewById(R.id.civilRightsLevel);
         progressiveLevel = findViewById(R.id.progressiveLevel);
         sourceImage = findViewById(R.id.sourceImage);
         sourceImage.setImageResource(R.drawable.carnegiehome);
-
-        industrialButton = findViewById(R.id.industrialButton);
-        civilRightsButton = findViewById(R.id.civilRightsButton);
-        progressiveButton = findViewById(R.id.progressiveButton);
     }
 
     private void populateImageSets() {
@@ -141,54 +128,139 @@ public class MainActivity extends AppCompatActivity {
         progressiveImageQueue.add(R.drawable.roosevelt);
     }
 
-    public void onGuessEntered(View view) {
-        // If we've made all of our guesses,
-        // show the screen, update their level ranking,
-        // and ask them to choose a category to continue on that screen.
-
-        // Check the current category to
-        if (currentCategory == Category.INDUSTRIALIZATION) {
-            sourceImage.setImageResource(industrialImageQueue.remove());
-        } else if (currentCategory == Category.CIVIL_RIGHTS) {
-            sourceImage.setImageResource(civilRightsImageQueue.remove());
-        } else if (currentCategory == Category.PROGRESSIVE) {
-            sourceImage.setImageResource(progressiveImageQueue.remove());
+    private String calculateLevel() {
+        if (combinedYearDifference > 50) {
+            return "Novice";
+        }
+        else if (combinedYearDifference > 25) {
+            return "Intermediate";
+        }
+        else if (combinedYearDifference > 10) {
+            return "Expert";
+        } else if (combinedYearDifference > 0) {
+            return "History Master";
+        } else {
+            return "Historian God";
         }
     }
 
+    public void onGuessEntered(View view) {
+        // If we've made all of our guesses,
+        // show the screen, update their level ranking,
+        if (yearEntry.getText().toString().equals("")) {
+            Toast.makeText(this, "You must enter a value for your guess",
+                    Toast.LENGTH_SHORT).show();
+            return;
+        }
+        sourcesAnswered++;
+        if (sourcesAnswered > 3) {
+            Toast.makeText(this, "Please use a button to select a category",
+                    Toast.LENGTH_SHORT).show();
+            yearEntry.getText().clear();
+            return;
+        }
+        HashMap<Integer, Integer> currentCategoryMap;
+        TextView currentCategoryLevelView;
+        String startingString = "";
+        if (currentCategory == Category.INDUSTRIALIZATION) {
+            currentCategoryMap = industrialImageMap;
+            currentCategoryLevelView = industrialLevel;
+            startingString = "Inudstrialization Level: ";
+        } else if (currentCategory == Category.CIVIL_RIGHTS) {
+            currentCategoryMap = civilRightsImageMap;
+            currentCategoryLevelView = civilRightsLevel;
+            startingString = "Civil Rights Level:      ";
+        } else {
+            currentCategoryMap = progressiveImageMap;
+            currentCategoryLevelView = progressiveLevel;
+            startingString = "Porgress Era Level: ";
+        }
+
+        combinedYearDifference += Math.abs(Integer.parseInt(yearEntry.getText().toString()) - currentCategoryMap.get(currentImageId));
+
+        yearEntry.getText().clear();
+
+        if (sourcesAnswered >= 3) {
+            LinearLayout layout = findViewById(R.id.playAgainLayout);
+            layout.setBackgroundColor(Color.GRAY);
+            layout.setVisibility(View.VISIBLE);
+
+            TextView completionMessage = findViewById(R.id.winnerMessage);
+
+            String newLevel = calculateLevel();
+
+            completionMessage.setText("You've finished this Category with a total year difference of " + combinedYearDifference + "! " +
+                    "Making you a " + newLevel + ". Please select a new category to try again!");
+            currentCategoryLevelView.setText(startingString + newLevel);
+        }
+
+        // and ask them to choose a category to continue on that screen.
+        Queue<Integer> queueToRemoveFrom;
+        // Check the current category to
+        if (currentCategory == Category.INDUSTRIALIZATION) {
+            queueToRemoveFrom = industrialImageQueue;
+        } else if (currentCategory == Category.CIVIL_RIGHTS) {
+            queueToRemoveFrom = civilRightsImageQueue;
+        } else {
+            queueToRemoveFrom = progressiveImageQueue;
+        }
+
+        if (!queueToRemoveFrom.isEmpty()) {
+
+            currentImageId = queueToRemoveFrom.peek();
+            sourceImage.setImageResource(queueToRemoveFrom.remove());
+        } else {
+            // Display a toast message saying to pick a new category
+        }
+
+    }
+
+    public void onCloseMessage(View view) {
+
+        LinearLayout layout = findViewById(R.id.playAgainLayout);
+        layout.setVisibility(View.INVISIBLE);
+
+    }
     public void onIndustrialButtonClick(View view) {
         populateImageQueues();
         // Update the current Category TextView
         currentCategory = Category.INDUSTRIALIZATION;
         currentCategoryView.setText("Current Category: " + currentCategory.getName());
+        yearEntry.getText().clear();
         // Reset the current score
-        userScore = 0;
+        combinedYearDifference = 0;
         sourcesAnswered = 0;
         sourceImage.setImageResource(R.drawable.carnegiehome);
+        industrialImageQueue.remove();
+    }
+
+    public void onCivilRightsButtonClicked(View view) {
+        populateImageQueues();
+        // Update the current Category TextView
+        currentCategory = Category.CIVIL_RIGHTS;
+        currentCategoryView.setText("Current Category: " + currentCategory.getName());
+        yearEntry.getText().clear();
+
+        sourcesAnswered = 0;
+        combinedYearDifference = 0;
+        currentImageId = R.drawable.lbj;
+        sourceImage.setImageResource(R.drawable.lbj);
+        progressiveImageQueue.remove();
     }
 
     public void onProgressiveButtonClicked(View view) {
         populateImageQueues();
 
         // Update the current Category TextView
-        currentCategory = Category.CIVIL_RIGHTS;
-        currentCategoryView.setText("Current Category: " + currentCategory.getName());
-
-        userScore = 0;
-        sourcesAnswered = 0;
-        sourceImage.setImageResource(R.drawable.lbj);
-
-    }
-
-    public void onCivilRightsButtonClicked(View view) {
-        populateImageQueues();
-        // Update the current Category TextView
         currentCategory = Category.PROGRESSIVE;
         currentCategoryView.setText("Current Category: " + currentCategory.getName());
+        yearEntry.getText().clear();
 
-        userScore = 0;
         sourcesAnswered = 0;
+        combinedYearDifference = 0;
+        currentImageId = R.drawable.womensuffrage;
         sourceImage.setImageResource(R.drawable.womensuffrage);
+        progressiveImageQueue.remove();
     }
-
+    
 }
