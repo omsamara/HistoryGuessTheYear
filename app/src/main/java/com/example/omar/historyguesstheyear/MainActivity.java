@@ -181,7 +181,7 @@ public class MainActivity extends AppCompatActivity {
         } else if (currentCategory == Category.CIVIL_RIGHTS) {
             currentCategoryMap = civilRightsImageMap;
             currentCategoryLevelView = civilRightsLevelView;
-            startingString = "Civil Rights Level:      ";
+            startingString = "Civil Rights Level:          ";
         } else {
             currentCategoryMap = progressiveImageMap;
             currentCategoryLevelView = progressiveLevelView;
