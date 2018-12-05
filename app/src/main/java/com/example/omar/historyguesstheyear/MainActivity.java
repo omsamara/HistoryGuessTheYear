@@ -4,7 +4,6 @@ import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -20,9 +19,13 @@ public class MainActivity extends AppCompatActivity {
     // Image and TextViews
     private TextView currentCategoryView;
     private EditText yearEntry;
-    private TextView industrialLevel;
-    private TextView civilRightsLevel;
-    private TextView progressiveLevel;
+    private TextView industrialLevelView;
+    private TextView civilRightsLevelView;
+    private TextView progressiveLevelView;
+
+    private String industrialLevel = "Novice";
+    private String civilRightsLevel = "Novice";
+    private String progressiveLevel = "Novice";
 
     private ImageView sourceImage;
 
@@ -38,6 +41,7 @@ public class MainActivity extends AppCompatActivity {
     private HashMap<Integer, Integer> civilRightsImageMap;
     private HashMap<Integer, Integer> progressiveImageMap;
 
+    private HashMap<String, Integer> levelRankings;
     // Number of sources answered for the current category
     private int sourcesAnswered;
 
@@ -80,9 +84,9 @@ public class MainActivity extends AppCompatActivity {
 
         currentCategoryView = findViewById(R.id.currentCategory);
         yearEntry = findViewById(R.id.yearGuessEntry);
-        industrialLevel = findViewById(R.id.industrialLevel);
-        civilRightsLevel = findViewById(R.id.civilRightsLevel);
-        progressiveLevel = findViewById(R.id.progressiveLevel);
+        industrialLevelView = findViewById(R.id.industrialLevel);
+        civilRightsLevelView = findViewById(R.id.civilRightsLevel);
+        progressiveLevelView = findViewById(R.id.progressiveLevel);
         sourceImage = findViewById(R.id.sourceImage);
         sourceImage.setImageResource(R.drawable.carnegiehome);
     }
@@ -100,6 +104,12 @@ public class MainActivity extends AppCompatActivity {
         progressiveImageMap.put(R.drawable.womensuffrage, 1917);
         progressiveImageMap.put(R.drawable.oil, 1904);
         progressiveImageMap.put(R.drawable.roosevelt, 1910);
+
+        levelRankings.put("Novice", 1);
+        levelRankings.put("Intermediate", 2);
+        levelRankings.put("Expert", 3);
+        levelRankings.put("History Master", 4);
+        levelRankings.put("Historic God", 5);
     }
 
     private void populateImageQueues() {
@@ -164,15 +174,15 @@ public class MainActivity extends AppCompatActivity {
         String startingString = "";
         if (currentCategory == Category.INDUSTRIALIZATION) {
             currentCategoryMap = industrialImageMap;
-            currentCategoryLevelView = industrialLevel;
+            currentCategoryLevelView = industrialLevelView;
             startingString = "Inudstrialization Level: ";
         } else if (currentCategory == Category.CIVIL_RIGHTS) {
             currentCategoryMap = civilRightsImageMap;
-            currentCategoryLevelView = civilRightsLevel;
+            currentCategoryLevelView = civilRightsLevelView;
             startingString = "Civil Rights Level:      ";
         } else {
             currentCategoryMap = progressiveImageMap;
-            currentCategoryLevelView = progressiveLevel;
+            currentCategoryLevelView = progressiveLevelView;
             startingString = "Porgress Era Level: ";
         }
 
@@ -188,10 +198,24 @@ public class MainActivity extends AppCompatActivity {
             TextView completionMessage = findViewById(R.id.winnerMessage);
 
             String newLevel = calculateLevel();
-
+            if (currentCategory == Category.INDUSTRIALIZATION) {
+                if (levelRankings.get(industrialLevel) < levelRankings.get(newLevel)) {
+                    industrialLevel = newLevel;
+                    currentCategoryLevelView.setText(startingString + newLevel);
+                }
+            } else if (currentCategory == Category.CIVIL_RIGHTS) {
+                if (levelRankings.get(civilRightsLevel) < levelRankings.get(newLevel)) {
+                    civilRightsLevel = newLevel;
+                    currentCategoryLevelView.setText(startingString + newLevel);
+                }
+            } else {
+                if (levelRankings.get(progressiveLevel) < levelRankings.get(newLevel)) {
+                    progressiveLevel = newLevel;
+                    currentCategoryLevelView.setText(startingString + newLevel);
+                }
+            }
             completionMessage.setText("You've finished this Category with a total year difference of " + combinedYearDifference + "! " +
                     "Making you a " + newLevel + ". Please select a new category to try again!");
-            currentCategoryLevelView.setText(startingString + newLevel);
         }
 
         // and ask them to choose a category to continue on that screen.
@@ -262,5 +286,5 @@ public class MainActivity extends AppCompatActivity {
         sourceImage.setImageResource(R.drawable.womensuffrage);
         progressiveImageQueue.remove();
     }
-    
+
 }
