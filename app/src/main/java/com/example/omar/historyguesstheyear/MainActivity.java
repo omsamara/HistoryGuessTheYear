@@ -114,6 +114,18 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void populateImageQueues() {
+
+        // Empties the queues so we're starting from scratch. No chance of duplicate additions.
+        while (!industrialImageQueue.isEmpty()) {
+            industrialImageQueue.remove();
+        }
+        while (!civilRightsImageQueue.isEmpty()) {
+            industrialImageQueue.remove();
+        }
+        while (!progressiveImageQueue.isEmpty()) {
+            industrialImageQueue.remove();
+        }
+
         industrialImageQueue.add(R.drawable.carnegiehome);
         industrialImageQueue.add(R.drawable.gospelofwealth);
         industrialImageQueue.add(R.drawable.henrygeorge);
@@ -127,33 +139,55 @@ public class MainActivity extends AppCompatActivity {
         progressiveImageQueue.add(R.drawable.roosevelt);
     }
 
-    public void onIndustrialButtonClick(View view) {
-        // Maybe a warning screen?
+    public void onGuessEntered(View view) {
+        // If we've made all of our guesses,
+        // show the screen, update their level ranking,
+        // and ask them to choose a category to continue on that screen.
 
+        // Check the current category to
+        if (currentCategory == Category.INDUSTRIALIZATION) {
+            sourceImage.setImageResource(industrialImageQueue.remove());
+        } else if (currentCategory == Category.CIVIL_RIGHTS) {
+
+        } else if (currentCategory == Category.PROGRESSIVE) {
+
+        } else {
+            // nothing
+        }
+    }
+
+    public void onIndustrialButtonClick(View view) {
+        populateImageQueues();
         // Update the current Category TextView
-        currentCategoryView.setText("Current Category: Industrialization");
+        currentCategory = Category.INDUSTRIALIZATION;
+        currentCategoryView.setText("Current Category: " + currentCategory.getName());
         // Reset the current score
         userScore = 0;
-        // Update the Current image.
+        sourcesAnswered = 0;
         sourceImage.setImageResource(R.drawable.carnegiehome);
     }
 
     public void onProgressiveButtonClicked(View view) {
+        populateImageQueues();
+        
         // Update the current Category TextView
+        currentCategory = Category.CIVIL_RIGHTS;
+        currentCategoryView.setText("Current Category: " + currentCategory.getName());
 
-        // Reset the current score
         userScore = 0;
-        // Update the Current image.
+        sourcesAnswered = 0;
         sourceImage.setImageResource(R.drawable.lbj);
 
     }
 
     public void onCivilRightsButtonClicked(View view) {
+        populateImageQueues();
         // Update the current Category TextView
+        currentCategory = Category.PROGRESSIVE;
+        currentCategoryView.setText("Current Category: " + currentCategory.getName());
 
-        // Reset the current score
-
-        // Update the Current image.
+        userScore = 0;
+        sourcesAnswered = 0;
         sourceImage.setImageResource(R.drawable.womensuffrage);
     }
 
