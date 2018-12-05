@@ -70,6 +70,8 @@ public class MainActivity extends AppCompatActivity {
         civilRightsImageQueue = new LinkedList<>();
         progressiveImageQueue = new LinkedList<>();
 
+        levelRankings = new HashMap<>();
+
         populateImageSets();
         instantiateViews();
         populateImageQueues();
