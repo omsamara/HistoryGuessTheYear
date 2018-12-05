@@ -111,7 +111,7 @@ public class MainActivity extends AppCompatActivity {
         levelRankings.put("Intermediate", 2);
         levelRankings.put("Expert", 3);
         levelRankings.put("History Master", 4);
-        levelRankings.put("Historic God", 5);
+        levelRankings.put("Historian God", 5);
     }
 
     private void populateImageQueues() {
@@ -271,7 +271,7 @@ public class MainActivity extends AppCompatActivity {
         combinedYearDifference = 0;
         currentImageId = R.drawable.lbj;
         sourceImage.setImageResource(R.drawable.lbj);
-        progressiveImageQueue.remove();
+        civilRightsImageQueue.remove();
     }
 
     public void onProgressiveButtonClicked(View view) {
