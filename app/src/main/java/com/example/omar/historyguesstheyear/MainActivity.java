@@ -78,6 +78,8 @@ public class MainActivity extends AppCompatActivity {
         populateImageSets();
         instantiateViews();
         populateImageQueues();
+        // Remove the first source from the image queue because it's already the default image.
+        industrialImageQueue.remove();
         userScore = 0;
         sourcesAnswered = 0;
         currentCategory = Category.INDUSTRIALIZATION;
@@ -120,10 +122,10 @@ public class MainActivity extends AppCompatActivity {
             industrialImageQueue.remove();
         }
         while (!civilRightsImageQueue.isEmpty()) {
-            industrialImageQueue.remove();
+            civilRightsImageQueue.remove();
         }
         while (!progressiveImageQueue.isEmpty()) {
-            industrialImageQueue.remove();
+            progressiveImageQueue.remove();
         }
 
         industrialImageQueue.add(R.drawable.carnegiehome);
@@ -148,11 +150,9 @@ public class MainActivity extends AppCompatActivity {
         if (currentCategory == Category.INDUSTRIALIZATION) {
             sourceImage.setImageResource(industrialImageQueue.remove());
         } else if (currentCategory == Category.CIVIL_RIGHTS) {
-
+            sourceImage.setImageResource(civilRightsImageQueue.remove());
         } else if (currentCategory == Category.PROGRESSIVE) {
-
-        } else {
-            // nothing
+            sourceImage.setImageResource(progressiveImageQueue.remove());
         }
     }
 
@@ -169,7 +169,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void onProgressiveButtonClicked(View view) {
         populateImageQueues();
-        
+
         // Update the current Category TextView
         currentCategory = Category.CIVIL_RIGHTS;
         currentCategoryView.setText("Current Category: " + currentCategory.getName());
